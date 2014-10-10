@@ -1,2 +1,6 @@
 translated/*
 *.iml
+.gradle/
+.idea/
+build/
+gradle/
