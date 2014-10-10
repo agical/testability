@@ -6,15 +6,23 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
 
 public class LanguageTranslator {
+
+    private static Collection<Character> vowels;
+
+    static {
+        vowels = new HashSet<>();
+        final String swedishVowels = "aeiouyåäö";
+        final char[] chars = swedishVowels.toCharArray();
+        for (char c : chars) {
+            vowels.add(c);
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         final Path pathToInputs = Paths.get("to-translate");
@@ -31,9 +39,14 @@ public class LanguageTranslator {
                     int read = bufferedReader.read();
                     while(read != -1) {
                         char character = (char) read;
-                        String toWrite = String.valueOf(character);
+                        String toWrite;
+                        if (vowels.contains(character)) {
+                            toWrite = String.valueOf(character);
+                        } else {
+                            toWrite = character + "o" + character;
+                        }
 
-                        resultWriter.write(read);
+                        resultWriter.write(toWrite);
                         read = bufferedReader.read();
                     }
                 }
