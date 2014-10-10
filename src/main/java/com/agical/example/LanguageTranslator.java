@@ -16,12 +16,12 @@ public class LanguageTranslator {
     private static Collection<Character> vowels;
 
     static {
-        vowels = new HashSet<>();
-        final String swedishVowels = "aeiouyåäö";
-        final char[] chars = swedishVowels.toCharArray();
+        Set<Character> set = new HashSet<>();
+        final char[] chars = "aeiouyåäö".toCharArray();
         for (char c : chars) {
-            vowels.add(c);
+            set.add(c);
         }
+        vowels = Collections.unmodifiableSet(set);
     }
 
     public static void main(String[] args) throws IOException {
