@@ -42,10 +42,12 @@ public class FileConverter {
                     while(read != -1) {
                         char character = (char) read;
                         String toWrite;
-                        if (!vowels.contains(character) && !Character.isWhitespace(character)) {
-                            toWrite = character + "o" + character;
-                        } else {
+                        if (!Character.isAlphabetic(character)
+                                || vowels.contains(character)
+                                || Character.isWhitespace(character)) {
                             toWrite = String.valueOf(character);
+                        } else {
+                            toWrite = character + "o" + character;
                         }
 
                         resultWriter.write(toWrite);
