@@ -8,10 +8,12 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
+import static java.nio.file.Files.newBufferedReader;
+import static java.nio.file.Files.newBufferedWriter;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static java.nio.file.StandardOpenOption.WRITE;
 
-public class LanguageTranslator {
+public class FileConverter {
 
     private static Collection<Character> vowels;
 
@@ -30,20 +32,20 @@ public class LanguageTranslator {
         Files.walkFileTree(pathToInputs, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                final BufferedReader bufferedReader = Files.newBufferedReader(file, Charset.forName("UTF-8"));
                 final Path newFile = pathToResults.resolve(file.getFileName());
                 if (!Files.exists(newFile)) {
                     Files.createFile(newFile);
                 }
-                try(BufferedWriter resultWriter = Files.newBufferedWriter(newFile, Charset.forName("UTF-8"), WRITE, TRUNCATE_EXISTING)) {
+                try(BufferedReader bufferedReader = newBufferedReader(file, Charset.forName("UTF-8"));
+                    BufferedWriter resultWriter = newBufferedWriter(newFile, Charset.forName("UTF-8"), WRITE, TRUNCATE_EXISTING)) {
                     int read = bufferedReader.read();
                     while(read != -1) {
                         char character = (char) read;
                         String toWrite;
-                        if (vowels.contains(character)) {
-                            toWrite = String.valueOf(character);
-                        } else {
+                        if (!vowels.contains(character) && !Character.isWhitespace(character)) {
                             toWrite = character + "o" + character;
+                        } else {
+                            toWrite = String.valueOf(character);
                         }
 
                         resultWriter.write(toWrite);
